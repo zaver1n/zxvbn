@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4f0">
+  <title>Библиотека — управление фондом</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="На главную">
+        <span class="brand-icon" aria-hidden="true">B</span>
+        <span>книжный<br><strong>дом</strong></span>
+      </a>
+      <div class="side-label">БИБЛИОТЕКА</div>
+      <nav class="navigation" aria-label="Основная навигация">
+        <a class="nav-link active" href="#overview"><span class="nav-icon">⌂</span>Обзор</a>
+        <a class="nav-link" href="#books"><span class="nav-icon">▤</span>Книги</a>
+        <a class="nav-link" href="#readers"><span class="nav-icon">♧</span>Читатели</a>
+      </nav>
+      <div class="sidebar-note">
+        <span class="note-icon">✳</span>
+        <p>Хорошая книга —<br>это путешествие,<br>которое всегда<br>под рукой.</p>
+        <span class="note-author">— библиотечная мудрость</span>
+      </div>
+      <div class="sidebar-bottom"><span class="online-dot"></span>Ваша библиотека онлайн</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">Главная <span>/</span> Обзор</div>
+        <div class="topbar-right">
+          <span class="today" id="today"></span>
+          <span class="avatar" aria-label="Библиотека">Б</span>
+        </div>
+      </header>
+
+      <section id="overview" class="welcome">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span>ПРОСТРАНСТВО ЗНАНИЙ</div>
+          <h1>Добро пожаловать<br>в вашу <em>библиотеку.</em></h1>
+          <p>Управляйте книжным фондом и помогайте историям<br class="desktop-break"> находить своих читателей.</p>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <div class="sun"></div><div class="book-stack"><i></i><i></i><i></i></div>
+          <div class="plant">✳</div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Статистика библиотеки">
+        <article class="stat-card stat-primary">
+          <div class="stat-top"><span>КНИЖНЫЙ ФОНД</span><span class="stat-icon">▤</span></div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-caption">книг в коллекции</div>
+          <div class="stat-decoration">BOOKS</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>ДОСТУПНО</span><span class="stat-icon green">↗</span></div>
+          <div class="stat-value" id="stat-available">—</div>
+          <div class="stat-caption">готовы к выдаче</div>
+          <div class="stat-bar"><span id="available-bar"></span></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>НА РУКАХ</span><span class="stat-icon amber">↗</span></div>
+          <div class="stat-value" id="stat-borrowed">—</div>
+          <div class="stat-caption">читают сейчас</div>
+          <div class="stat-bar amber-bar"><span id="borrowed-bar"></span></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>ЧИТАТЕЛИ</span><span class="stat-icon violet">♧</span></div>
+          <div class="stat-value" id="stat-readers">—</div>
+          <div class="stat-caption">зарегистрировано</div>
+          <div class="stat-decoration small-decoration">READERS</div>
+        </article>
+      </section>
+
+      <section id="books" class="panel books-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">ВАША КОЛЛЕКЦИЯ</div>
+            <h2>Книги <span class="count-pill" id="book-count">0</span></h2>
+          </div>
+          <button class="button button-dark" id="open-book-form"><span>＋</span> Добавить книгу</button>
+        </div>
+        <div class="toolbar">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="book-search" type="search" placeholder="Название, автор или год..." aria-label="Поиск по книгам">
+            <kbd>Ctrl K</kbd>
+          </label>
+          <div class="filters" role="group" aria-label="Фильтр книг">
+            <button class="filter active" data-filter="all">Все книги</button>
+            <button class="filter" data-filter="available">Доступны</button>
+            <button class="filter" data-filter="borrowed">Выданы</button>
+          </div>
+          <label class="sort-control">Сортировка
+            <select id="book-sort" aria-label="Сортировка книг">
+              <option value="title">по названию</option>
+              <option value="year">по году</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>НАЗВАНИЕ И АВТОР</th><th>ГОД</th><th>СТАТУС</th><th>ЧИТАТЕЛЬ / СРОК</th><th>ДЕЙСТВИЯ</th></tr></thead>
+            <tbody id="books-body"></tbody>
+          </table>
+          <div class="empty-state hidden" id="empty-books">
+            <span>▤</span><strong>Книги не найдены</strong><p>Попробуйте изменить поиск или добавьте книгу в коллекцию.</p>
+          </div>
+        </div>
+        <div class="table-footer"><span id="book-summary">Загрузка коллекции...</span><span>Всего добавлено: <strong id="total-ever">0</strong></span></div>
+      </section>
+
+      <section id="readers" class="panel readers-panel">
+        <div class="panel-heading reader-heading">
+          <div>
+            <div class="eyebrow">СООБЩЕСТВО</div>
+            <h2>Читатели <span class="count-pill" id="reader-count">0</span></h2>
+          </div>
+          <button class="button button-light" id="open-reader-form"><span>＋</span> Добавить читателя</button>
+        </div>
+        <div class="reader-list" id="reader-list"></div>
+        <div class="reader-empty" id="empty-readers">Пока нет читателей. Добавьте первого участника библиотеки.</div>
+      </section>
+      <footer class="footer"><span>© <span id="year"></span> Книжный дом</span><span>Создано с любовью к чтению <b>♥</b></span></footer>
+    </main>
+  </div>
+
+  <dialog class="modal" id="book-modal">
+    <form id="book-form">
+      <div class="modal-head"><div><div class="eyebrow">КНИЖНЫЙ ФОНД</div><h2 id="book-modal-title">Новая книга</h2></div><button class="close-button" type="button" data-close aria-label="Закрыть">×</button></div>
+      <label>Название книги<input name="title" required maxlength="200" placeholder="Например, Мастер и Маргарита"></label>
+      <label>Автор<input name="author" required maxlength="150" placeholder="Имя и фамилия автора"></label>
+      <label>Год издания<input name="year" type="number" min="1" required></label>
+      <div class="form-error" id="book-error" role="alert"></div>
+      <div class="modal-actions"><button class="button button-light" type="button" data-close>Отмена</button><button class="button button-dark" type="submit" id="book-submit">Добавить книгу</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="reader-modal">
+    <form id="reader-form">
+      <div class="modal-head"><div><div class="eyebrow">СООБЩЕСТВО</div><h2 id="reader-modal-title">Новый читатель</h2></div><button class="close-button" type="button" data-close aria-label="Закрыть">×</button></div>
+      <label>Имя<input name="firstName" required maxlength="100" placeholder="Например, Анна"></label>
+      <label>Фамилия<input name="lastName" maxlength="100" placeholder="Например, Иванова"></label>
+      <label>Телефон <span class="optional">(необязательно)</span><input name="phone" type="tel" maxlength="40" placeholder="+7 700 000 00 00"></label>
+      <div class="form-error" id="reader-error" role="alert"></div>
+      <div class="modal-actions"><button class="button button-light" type="button" data-close>Отмена</button><button class="button button-dark" type="submit" id="reader-submit">Зарегистрировать</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="borrow-modal">
+    <form id="borrow-form">
+      <div class="modal-head"><div><div class="eyebrow">ВЫДАЧА КНИГИ</div><h2>Выдать читателю</h2></div><button class="close-button" type="button" data-close aria-label="Закрыть">×</button></div>
+      <p class="selected-book" id="borrow-book-title"></p>
+      <label>Читатель<select name="readerId" required id="reader-select"></select></label>
+      <label>Вернуть до<input name="dueDate" id="due-date-input" type="date" required></label>
+      <div class="fine-note">Срок выдачи можно установить при оформлении. По умолчанию — 14 дней.</div>
+      <div class="form-error" id="borrow-error" role="alert"></div>
+      <div class="modal-actions"><button class="button button-light" type="button" data-close>Отмена</button><button class="button button-dark" type="submit">Выдать книгу</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="return-modal">
+    <form id="return-form">
+      <div class="modal-head"><div><div class="eyebrow">ВОЗВРАТ КНИГИ</div><h2>Принять возврат</h2></div><button class="close-button" type="button" data-close aria-label="Закрыть">×</button></div>
+      <p class="selected-book" id="return-book-title"></p>
+      <p class="return-details" id="return-details"></p>
+      <div class="fine-note">Штраф рассчитывается автоматически: 100 ₸ за каждый день после срока возврата.</div>
+      <div class="form-error" id="return-error" role="alert"></div>
+      <div class="modal-actions"><button class="button button-light" type="button" data-close>Отмена</button><button class="button button-dark" type="submit">Подтвердить возврат</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>
